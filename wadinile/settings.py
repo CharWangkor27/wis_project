@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'wadinile.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'wadinile',
+        'USER': 'wangkor',
+        'PASSWORD': 'Black"c"24/7',
+        'HOST': 'localhost',
+        'PORT': 3306,
     }
 }
 

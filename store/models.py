@@ -85,6 +85,7 @@ class OrderItem(models.Model):
 class Address(models.Model):
     street = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
+    zip = models.CharField(max_length=20)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
 # cart class
