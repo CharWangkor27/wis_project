@@ -4,6 +4,7 @@ from enum import auto
 from tkinter import CASCADE
 from django.db import models
 from django.forms import DateTimeField
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 
@@ -18,19 +19,33 @@ class Collection(models.Model):
     featured_product = models.ForeignKey(
         'Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
+    def __str__(self) -> str:
+        return self.title
+
+    class Meta:
+        ordering = ['title']
+
 
 class Product(models.Model):
     title = models.CharField(max_length=20)
-    partnerNumber = models.CharField(max_length=6)
+    partner_Number = models.CharField(max_length=6)
     brand = models.CharField(max_length=20)
     made = models.CharField(max_length=20)
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
-    quantity = models.IntegerField()
+    unit_price = models.DecimalField(
+        max_digits=6, decimal_places=2,
+        validators=[MinValueValidator(1)])
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])
     last_update = models.DateTimeField(auto_now=True)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
-    promotions = models.ManyToManyField(Promotion)
+    promotions = models.ManyToManyField(Promotion, blank=True)
     slug = models.SlugField()
+
+    def __str__(self) -> str:
+        return self.title
+
+    class Meta:
+        ordering = ['title']
 
 
 class Customer(models.Model):
@@ -51,8 +66,15 @@ class Customer(models.Model):
     membership = models.CharField(
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
+    def __str__(self) -> str:
+        return f'{self.first_name}{self.last_name}'
+
+    class Meta:
+        ordering = ['first_name', 'last_name']
+
 
 # order model
+
 
 class Order(models.Model):
     PAYMENT_PENDING = 'P'
